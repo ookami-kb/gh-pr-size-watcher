@@ -9,5 +9,3 @@ jobs:
       - uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          errorSize: 3
-          warningSize: 2
