@@ -3,6 +3,10 @@
 </p>
 
 # Create a JavaScript Action using TypeScript
+x
+2 additions: OK
+3 additions: warning
+4 additions: error
 
 Use this template to bootstrap the creation of a JavaScript action.:rocket:
 
