@@ -3522,7 +3522,7 @@ const checker_1 = __webpack_require__(812);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
+            const GITHUB_TOKEN = core.getInput('githubToken');
             const gitHub = new github_1.GitHub(GITHUB_TOKEN);
             const pr = github_1.context.payload.pull_request;
             if (!pr) {

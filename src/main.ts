@@ -4,7 +4,7 @@ import {Checker, Result} from './checker'
 
 async function run(): Promise<void> {
   try {
-    const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN')
+    const GITHUB_TOKEN = core.getInput('githubToken')
     const gitHub = new GitHub(GITHUB_TOKEN)
     const pr = context.payload.pull_request
     if (!pr) {
