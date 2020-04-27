@@ -3517,33 +3517,46 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
-const wait_1 = __webpack_require__(521);
 const github_1 = __webpack_require__(469);
+const checker_1 = __webpack_require__(812);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const GITHUB_TOKEN = core.getInput('GITHUB_TOKEN');
-            const oktokit = new github_1.GitHub(GITHUB_TOKEN);
+            const gitHub = new github_1.GitHub(GITHUB_TOKEN);
             const pr = github_1.context.payload.pull_request;
             if (!pr) {
                 core.setFailed('This is not a PR');
                 return;
             }
-            const files = yield oktokit.pulls.listFiles(Object.assign(Object.assign({}, github_1.context.repo), { 
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                pull_number: pr.number }));
-            core.info(JSON.stringify(files.data));
-            const ms = core.getInput('milliseconds');
-            core.debug(`Waiting ${ms} milliseconds ...`);
-            core.debug(new Date().toTimeString());
-            yield wait_1.wait(parseInt(ms, 10));
-            core.debug(new Date().toTimeString());
-            core.setOutput('time', new Date().toTimeString());
+            const errorSize = parseInt(core.getInput('errorSize'), 10);
+            const errorMessage = core.getInput('errorMessage');
+            const warningSize = parseInt(core.getInput('warningSize'), 10);
+            const warningMessage = core.getInput('warningMessage');
+            const excludeTitle = core.getInput('excludeTitle');
+            const checker = new checker_1.Checker(errorSize, warningSize, excludeTitle.length === 0 ? undefined : new RegExp(excludeTitle));
+            const prParams = Object.assign(Object.assign({}, github_1.context.repo), { pull_number: pr.number });
+            const response = yield gitHub.pulls.listFiles(prParams);
+            const pullRequest = yield gitHub.pulls.get(prParams);
+            const result = checker.check({ title: pullRequest.data.title, files: response.data });
+            switch (result) {
+                case checker_1.Result.ok:
+                    break;
+                case checker_1.Result.warning:
+                    yield gitHub.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: pr.number, body: format(warningMessage, warningSize) }));
+                    break;
+                case checker_1.Result.error:
+                    yield gitHub.pulls.createReview(Object.assign(Object.assign({}, prParams), { body: format(errorMessage, errorSize), event: 'REQUEST_CHANGES' }));
+                    break;
+            }
         }
         catch (error) {
             core.setFailed(error.message);
         }
     });
+}
+function format(message, allowed) {
+    return message.replace('{allowed}', allowed.toString(10));
 }
 run();
 
@@ -7502,36 +7515,6 @@ function addHook (state, kind, name, hook) {
 
 /***/ }),
 
-/***/ 521:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-function wait(milliseconds) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => {
-            if (isNaN(milliseconds)) {
-                throw new Error('milliseconds not a number');
-            }
-            setTimeout(() => resolve('done!'), milliseconds);
-        });
-    });
-}
-exports.wait = wait;
-
-
-/***/ }),
-
 /***/ 523:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -9099,6 +9082,47 @@ function getUserAgent() {
 
 exports.getUserAgent = getUserAgent;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 812:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Result;
+(function (Result) {
+    Result[Result["ok"] = 0] = "ok";
+    Result[Result["warning"] = 1] = "warning";
+    Result[Result["error"] = 2] = "error";
+})(Result = exports.Result || (exports.Result = {}));
+class Checker {
+    constructor(errorSize, warningSize, excludeTitle) {
+        this.errorSize = errorSize;
+        this.warningSize = warningSize;
+        this.excludeTitle = excludeTitle;
+    }
+    check(pr) {
+        if (this.shouldSkip(pr.title))
+            return Result.ok;
+        const additions = Checker.getAdditions(pr.files);
+        if (additions > this.errorSize)
+            return Result.error;
+        if (additions > this.warningSize)
+            return Result.warning;
+        return Result.ok;
+    }
+    shouldSkip(title) {
+        var _a, _b;
+        return _b = (_a = this.excludeTitle) === null || _a === void 0 ? void 0 : _a.test(title), (_b !== null && _b !== void 0 ? _b : false);
+    }
+    static getAdditions(data) {
+        return data.map(v => v.additions).reduce((acc, v) => acc + v, 0);
+    }
+}
+exports.Checker = Checker;
 
 
 /***/ }),
