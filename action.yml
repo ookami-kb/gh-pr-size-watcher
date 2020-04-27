@@ -1,10 +1,30 @@
-name: 'Your name here'
-description: 'Provide a description here'
+name: PR Size Checker
+description: >
+  Checks PR size.
+  Adds comment to PR if total number of additions > warningSize.
+  Requests changes on PR if total number of additions > errorSize.
 author: 'Your name or organization here'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  errorSize:
+    description: Max number of additions after each changes will be requested.
+    default: '500'
+    required: false
+  errorMessage:
+    description: >
+      Message that will be added as review comment if error is triggered.
+      {allowed} placeholder will be replaced with `errorSize` value.
+    default: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.'
+    required: false
+  warningSize:
+    description: Max number of additions after each warning comment will be added.
+    default: '300'
+    required: false
+  warningMessage:
+    description: >
+      Message that will be added as a comment if warning is triggered.
+      {allowed} placeholder will be replaced with `warningSize` value.
+    default: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

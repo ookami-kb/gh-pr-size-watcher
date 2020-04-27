@@ -1,27 +1,39 @@
-import {wait} from '../src/wait'
-import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
+import {Checker, Result} from "../src/checker";
 
-test('throws invalid number', async () => {
-  const input = parseInt('foo', 10)
-  await expect(wait(input)).rejects.toThrow('milliseconds not a number')
-})
+test('skips validation if excludeTitle matches', () => {
+  const excludeTitle = new RegExp('Skip')
+  const checker = new Checker(20, 10, excludeTitle)
+  const result = checker.check({title: 'Skip PR size check', files: [{additions: 100}]})
+  expect(result).toBe(Result.ok)
+});
 
-test('wait 500 ms', async () => {
-  const start = new Date()
-  await wait(500)
-  const end = new Date()
-  var delta = Math.abs(end.getTime() - start.getTime())
-  expect(delta).toBeGreaterThan(450)
-})
+test('does validation if excludeTitle not matches', () => {
+  const excludeTitle = new RegExp('NO_VALIDATION')
+  const checker = new Checker(20, 10, excludeTitle)
+  const result = checker.check({title: 'Skip PR size check', files: [{additions: 100}]})
+  expect(result).toBe(Result.error)
+});
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = '500'
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execSync(`node ${ip}`, options).toString())
-})
+test('does validation if excludeTitle is undefined', () => {
+  const checker = new Checker(20, 10)
+  const result = checker.check({title: 'Skip PR size check', files: [{additions: 100}]})
+  expect(result).toBe(Result.error)
+});
+
+test('returns warning', () => {
+  const checker = new Checker(20, 10)
+  const result = checker.check({title: 'PR', files: [{additions: 10}, {additions: 5}]})
+  expect(result).toBe(Result.warning)
+});
+
+test('returns errors', () => {
+  const checker = new Checker(20, 10)
+  const result = checker.check({title: 'PR', files: [{additions: 10}, {additions: 15}]})
+  expect(result).toBe(Result.error)
+});
+
+test('returns OK', () => {
+  const checker = new Checker(100, 50)
+  const result = checker.check({title: 'PR', files: [{additions: 10}, {additions: 15}]})
+  expect(result).toBe(Result.ok)
+});
