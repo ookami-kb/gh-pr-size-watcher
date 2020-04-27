@@ -1,6 +1,14 @@
 # PR Size Watcher
 
-Checks PR for a total number of additions. To use the action put this into your Workflows file:
+Checks PR for a total number of additions. 
+
+If number of additions is greater than `errorSize` build will fail, and `errorMessage` will be added as a comment.
+
+If number of additions is greater than `warningSize` then `warningMessage` will be added as a comment.
+
+You can optionally specify `excludeTitle` regex that will skip this validation if PR title matches the regex.
+
+To use the action put this into your Workflows file:
 
 ```yaml
 name: PR Size Watcher
@@ -14,16 +22,10 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ookami-kb/gh-pr-size-watcher@v1
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-```
-
-You can specify additional options:
-
-```yaml
-with:
-    errorSize: 500
-    errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.'
-    warningSize: 300
-    warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.'
-    excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # required
+          errorSize: 500 # optional
+          errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.' # optional
+          warningSize: 300 # optional
+          warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
+          excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex
 ```
