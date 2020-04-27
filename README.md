@@ -4,6 +4,7 @@ Checks PR for a total number of additions. To use the action put this into your 
 x
 2 additions: OK
 3 additions: warning
+4 additions: error
 
 ```yaml
 name: PR Size Watcher
