@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ookami-kb/gh-pr-size-watcher@v1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 You can specify additional options:
