@@ -44,11 +44,12 @@ async function run(): Promise<void> {
         })
         break
       case Result.error:
-        await gitHub.pulls.createReview({
-          ...prParams,
-          body: format(errorMessage, errorSize),
-          event: 'REQUEST_CHANGES'
+        await gitHub.issues.createComment({
+          ...context.repo,
+          issue_number: pr.number,
+          body: format(errorMessage, errorSize)
         })
+        core.setFailed('Maximum PR size exceeded')
         break
     }
   } catch (error) {

@@ -2,7 +2,7 @@ name: PR Size Checker
 description: >
   Checks PR size.
   Adds comment to PR if total number of additions > warningSize.
-  Requests changes on PR if total number of additions > errorSize.
+  Fails the build and adds comment to PR if total number of additions > errorSize.
 author: 'Your name or organization here'
 inputs:
   errorSize:
@@ -11,7 +11,7 @@ inputs:
     required: false
   errorMessage:
     description: >
-      Message that will be added as review comment if error is triggered.
+      Message that will be added as a comment if error is triggered.
       {allowed} placeholder will be replaced with `errorSize` value.
     default: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.'
     required: false
@@ -24,6 +24,11 @@ inputs:
       Message that will be added as a comment if warning is triggered.
       {allowed} placeholder will be replaced with `warningSize` value.
     default: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.'
+    required: false
+  excludeTitle:
+    description: >
+      If not empty PR title will be checked against this regex. If it matches, validation will be skipped.
+    default: ''
     required: false
 runs:
   using: 'node12'

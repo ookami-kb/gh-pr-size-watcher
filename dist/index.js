@@ -3546,7 +3546,8 @@ function run() {
                     yield gitHub.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: pr.number, body: format(warningMessage, warningSize) }));
                     break;
                 case checker_1.Result.error:
-                    yield gitHub.pulls.createReview(Object.assign(Object.assign({}, prParams), { body: format(errorMessage, errorSize), event: 'REQUEST_CHANGES' }));
+                    yield gitHub.issues.createComment(Object.assign(Object.assign({}, github_1.context.repo), { issue_number: pr.number, body: format(errorMessage, errorSize) }));
+                    core.setFailed('Maximum PR size exceeded');
                     break;
             }
         }

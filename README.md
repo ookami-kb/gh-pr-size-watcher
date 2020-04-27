@@ -25,4 +25,5 @@ with:
     errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.'
     warningSize: 300
     warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.'
+    excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex
 ```
