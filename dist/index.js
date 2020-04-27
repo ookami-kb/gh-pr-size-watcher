@@ -3532,7 +3532,7 @@ function run() {
             const files = yield oktokit.pulls.listFiles(Object.assign(Object.assign({}, github_1.context.repo), { 
                 // eslint-disable-next-line @typescript-eslint/camelcase
                 pull_number: pr.number }));
-            core.debug(JSON.stringify(files.data));
+            core.info(JSON.stringify(files.data));
             const ms = core.getInput('milliseconds');
             core.debug(`Waiting ${ms} milliseconds ...`);
             core.debug(new Date().toTimeString());
