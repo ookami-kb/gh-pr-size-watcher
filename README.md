@@ -4,7 +4,6 @@ Checks PR for a total number of additions. To use the action put this into your 
 x
 2 additions: OK
 
-
 ```yaml
 name: PR Size Watcher
 on: [pull_request]
