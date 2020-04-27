@@ -1,9 +1,9 @@
 name: PR Size Checker
-description: >
-  Checks PR size.
-  Adds comment to PR if total number of additions > warningSize.
-  Fails the build and adds comment to PR if total number of additions > errorSize.
-author: 'Your name or organization here'
+description: Checks PR size, adds comment and/or fails build if PR is too big.
+branding:
+  icon: 'eye'
+  color: 'gray-dark'
+author: Kirill Bubochkin
 inputs:
   errorSize:
     description: Max number of additions after each changes will be requested.
