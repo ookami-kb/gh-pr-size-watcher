@@ -1,4 +1,4 @@
-name: PR Size Checker
+name: PR Size Watcher
 description: Checks PR size, adds comment and/or fails build if PR is too big.
 branding:
   icon: 'eye'
