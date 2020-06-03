@@ -34,6 +34,11 @@ inputs:
       If not empty PR title will be checked against this regex. If it matches, validation will be skipped.
     default: ''
     required: false
+  excludePaths:
+    description: >
+      File paths that should be excluded from size calculation.
+    default: []
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

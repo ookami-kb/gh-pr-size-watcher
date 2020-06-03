@@ -28,4 +28,6 @@ jobs:
           warningSize: 300 # optional
           warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
           excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex
+          excludePaths: # to exclude some files from calculation
+            - "**/test/**"
 ```

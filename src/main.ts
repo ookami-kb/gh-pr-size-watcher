@@ -1,10 +1,11 @@
 import * as core from '@actions/core'
 import {context, GitHub} from '@actions/github'
 import {Checker, Result} from './checker'
+import {getInputAsArray} from './utils'
 
 async function run(): Promise<void> {
   try {
-    const GITHUB_TOKEN = core.getInput('githubToken')
+    const GITHUB_TOKEN = core.getInput('githubToken', {required: true})
     const gitHub = new GitHub(GITHUB_TOKEN)
     const pr = context.payload.pull_request
     if (!pr) {
@@ -17,12 +18,14 @@ async function run(): Promise<void> {
     const warningSize = parseInt(core.getInput('warningSize'), 10)
     const warningMessage = core.getInput('warningMessage')
     const excludeTitle = core.getInput('excludeTitle')
+    const excludePaths = getInputAsArray('excludePaths')
 
-    const checker = new Checker(
+    const checker = new Checker({
       errorSize,
       warningSize,
-      excludeTitle.length === 0 ? undefined : new RegExp(excludeTitle)
-    )
+      excludeTitle: excludeTitle.length === 0 ? undefined : new RegExp(excludeTitle),
+      excludePaths
+    })
 
     const prParams = {
       ...context.repo,
