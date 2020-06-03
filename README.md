@@ -8,6 +8,8 @@ If number of additions is greater than `warningSize` then `warningMessage` will 
 
 You can optionally specify `excludeTitle` regex that will skip this validation if PR title matches the regex.
 
+To exclude some files from being calculated use optional `excludePaths` parameter. It takes a "list" of globs (since GitHub actions don't support passing real yaml lists as input parameters, use syntax from the example below).
+
 To use the action put this into your Workflows file:
 
 ```yaml
@@ -28,5 +30,6 @@ jobs:
           warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
           excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex, optional
           excludePaths:  | # to exclude some files from calculation, optional
-            **/test/**
+            README.md
+            **/test/resources/*.json
 ```
