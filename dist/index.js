@@ -10416,8 +10416,8 @@ class Checker {
             return Result.ok;
         const files = pr.files.filter(f => !this.excludePaths.some(p => minimatch_1.default(f.filename, p)));
         if (core.isDebug()) {
-            core.debug(`PR files: [${pr.files.join(', ')}]`);
-            core.debug(`Filtered files: [${files.join(', ')}]`);
+            core.debug(`PR files: [${pr.files.map(f => f.filename).join(', ')}]`);
+            core.debug(`Filtered files: [${files.map(f => f.filename).join(', ')}]`);
         }
         const additions = Checker.getAdditions(files);
         if (additions > this.errorSize)
