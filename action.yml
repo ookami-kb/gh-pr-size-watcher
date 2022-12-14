@@ -1,44 +1,44 @@
 name: PR Size Watcher
 description: Checks PR size, adds comment and/or fails build if PR is too big.
 branding:
-  icon: 'eye'
-  color: 'gray-dark'
+  icon: "eye"
+  color: "gray-dark"
 author: Kirill Bubochkin
 inputs:
   githubToken:
-    description: 'GitHub token for commenting on a PR'
-    default: ''
+    description: "GitHub token for commenting on a PR"
+    default: ""
     required: true
   errorSize:
     description: Max number of additions after each changes will be requested.
-    default: '500'
+    default: "500"
     required: false
   errorMessage:
     description: >
       Message that will be added as a comment if error is triggered.
       {allowed} placeholder will be replaced with `errorSize` value.
-    default: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.'
+    default: ":no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs."
     required: false
   warningSize:
     description: Max number of additions after each warning comment will be added.
-    default: '300'
+    default: "300"
     required: false
   warningMessage:
     description: >
       Message that will be added as a comment if warning is triggered.
       {allowed} placeholder will be replaced with `warningSize` value.
-    default: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.'
+    default: ":warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs."
     required: false
   excludeTitle:
     description: >
       If not empty PR title will be checked against this regex. If it matches, validation will be skipped.
-    default: ''
+    default: ""
     required: false
   excludePaths:
     description: >
       File paths that should be excluded from size calculation.
-    default: ''
+    default: ""
     required: false
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
