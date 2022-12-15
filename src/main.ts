@@ -19,6 +19,7 @@ async function run(): Promise<void> {
     const warningMessage = core.getInput('warningMessage')
     const excludeTitle = core.getInput('excludeTitle')
     const excludePaths = getInputAsArray('excludePaths')
+    const comment = core.getInput('comment')
 
     const checker = new Checker({
       errorSize,
@@ -40,18 +41,22 @@ async function run(): Promise<void> {
       case Result.ok:
         break
       case Result.warning:
-        await gitHub.issues.createComment({
-          ...context.repo,
-          issue_number: pr.number,
-          body: format(warningMessage, warningSize)
-        })
+        if (comment === 'true') {
+          await gitHub.issues.createComment({
+            ...context.repo,
+            issue_number: pr.number,
+            body: format(warningMessage, warningSize)
+          })
+        }
         break
       case Result.error:
-        await gitHub.issues.createComment({
-          ...context.repo,
-          issue_number: pr.number,
-          body: format(errorMessage, errorSize)
-        })
+        if (comment === 'true') {
+          await gitHub.issues.createComment({
+            ...context.repo,
+            issue_number: pr.number,
+            body: format(errorMessage, errorSize)
+          })
+        }
         core.setFailed('Maximum PR size exceeded')
         break
     }

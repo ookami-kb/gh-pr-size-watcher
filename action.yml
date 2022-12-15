@@ -39,6 +39,11 @@ inputs:
       File paths that should be excluded from size calculation.
     default: ""
     required: false
+  comment:
+    description: >
+      If false, comment will be added to a PR.
+    default: "true"
+    required: false
 runs:
   using: "node16"
   main: "dist/index.js"
