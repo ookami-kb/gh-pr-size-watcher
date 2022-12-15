@@ -28,6 +28,7 @@ jobs:
           errorMessage: ':no_entry: PR has more than **{allowed} additions**. Split it into smaller PRs.' # optional
           warningSize: 300 # optional
           warningMessage: ':warning: PR has more than **{allowed} additions**. Consider splitting it into smaller PRs.' # optional
+          comment: false # to skip comment creation in the PR, optional
           excludeTitle: 'PR_SIZE_SKIP' # to skip validation if PR title matches regex, optional
           excludePaths:  | # to exclude some files from calculation, optional
             README.md
