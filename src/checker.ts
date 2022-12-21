@@ -33,9 +33,10 @@ export class Checker {
   check(pr: {
     title: string
     files: {additions: number; filename: string}[]
-    labels: {name: string}[]
+    labels: string[]
   }): Result {
     core.debug(`PR title: ${pr.title}`)
+    core.debug(`PR labels: ${pr.labels.join(', ')}`)
     if (this.shouldSkip(pr.title, pr.labels)) return Result.ok
 
     const files = pr.files.filter(f => !this.excludePaths.some(p => minimatch(f.filename, p)))
@@ -51,10 +52,10 @@ export class Checker {
     return Result.ok
   }
 
-  private shouldSkip(title: string, labels: {name: string}[]): boolean {
+  private shouldSkip(title: string, labels: string[]): boolean {
     return (
       this.excludeTitle?.test(title) ??
-      labels.filter(v => this.excludeLabels.includes(v.name)).length > 0
+      labels.filter(it => this.excludeLabels.includes(it)).length > 0
     )
   }
 

@@ -23,7 +23,7 @@ test('does validation if excludeLabels not matches', () => {
   const checker = new Checker({errorSize: 20, warningSize: 10, excludeTitle, excludeLabels})
   const result = checker.check({
     title: 'Skip PR size check', files: [{additions: 100, filename: '1.txt'}],
-    labels: [{name: 'no-skip'}]
+    labels: ['no-skip']
   })
   expect(result).toBe(Result.error)
 });
@@ -102,7 +102,7 @@ test('skips files matching excludeLabels', () => {
       {additions: 100, filename: 'README.md'},
       {additions: 100, filename: 'resources/1.json'},
     ],
-    labels: [{name: 'skip'}]
+    labels: ['skip']
   })
   expect(result).toBe(Result.ok)
 });

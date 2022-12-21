@@ -39,7 +39,7 @@ async function run(): Promise<void> {
     const result = checker.check({
       title: pullRequest.data.title,
       files: response.data,
-      labels: pullRequest.data.labels
+      labels: pullRequest.data.labels.map(it => it.name)
     })
 
     switch (result) {
