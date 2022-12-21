@@ -19,12 +19,14 @@ async function run(): Promise<void> {
     const warningMessage = core.getInput('warningMessage')
     const excludeTitle = core.getInput('excludeTitle')
     const excludePaths = getInputAsArray('excludePaths')
+    const excludeLabels = getInputAsArray('excludeLabels')
 
     const checker = new Checker({
       errorSize,
       warningSize,
       excludeTitle: excludeTitle.length === 0 ? undefined : new RegExp(excludeTitle),
-      excludePaths
+      excludePaths,
+      excludeLabels
     })
 
     const prParams = {
@@ -34,7 +36,11 @@ async function run(): Promise<void> {
     const response = await gitHub.pulls.listFiles(prParams)
     const pullRequest = await gitHub.pulls.get(prParams)
 
-    const result = checker.check({title: pullRequest.data.title, files: response.data})
+    const result = checker.check({
+      title: pullRequest.data.title,
+      files: response.data,
+      labels: pullRequest.data.labels
+    })
 
     switch (result) {
       case Result.ok:

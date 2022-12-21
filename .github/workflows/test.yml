@@ -12,3 +12,4 @@ jobs:
           excludePaths: |
             dist/**
             README.md
+          errorSize: 1
