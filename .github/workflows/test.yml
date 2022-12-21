@@ -20,5 +20,6 @@ jobs:
           excludePaths: |
             dist/**
             README.md
+            package-lock.json
           excludeLabels: |
             skip-size-check
