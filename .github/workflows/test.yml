@@ -1,5 +1,13 @@
 name: "build-test"
-on: [pull_request]
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
 
 jobs:
   test:
@@ -12,3 +20,6 @@ jobs:
           excludePaths: |
             dist/**
             README.md
+            package-lock.json
+          excludeLabels: |
+            skip-size-check

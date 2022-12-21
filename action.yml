@@ -39,6 +39,11 @@ inputs:
       File paths that should be excluded from size calculation.
     default: ""
     required: false
+  excludeLabels:
+    description: >
+      Labels that should be excluded from size calculation.
+    default: ""
+    required: false
 runs:
   using: "node16"
   main: "dist/index.js"
