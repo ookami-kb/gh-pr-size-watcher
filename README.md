@@ -8,6 +8,8 @@ If number of additions is greater than `warningSize` then `warningMessage` will 
 
 You can optionally specify `excludeTitle` regex that will skip this validation if PR title matches the regex.
 
+You can optionally specify `excludeLabels`: it will skip this validation if PR labels contain one of the labels.
+
 To exclude some files from being calculated use optional `excludePaths` parameter. It takes a "list" of globs (since GitHub actions don't support passing real yaml lists as input parameters, use syntax from the example below).
 
 To use the action put this into your Workflows file:
