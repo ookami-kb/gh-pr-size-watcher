@@ -1,6 +1,6 @@
 # PR Size Watcher
 
-Checks PR for a total number of additions. 
+Checks PR for a total number of additions.
 
 If number of additions is greater than `errorSize` build will fail, and `errorMessage` will be added as a comment.
 
@@ -32,4 +32,6 @@ jobs:
           excludePaths:  | # to exclude some files from calculation, optional
             README.md
             **/test/resources/*.json
+          excludeLabels:  | # to skip validation if PR labels contain one of these, optional
+            skip-size-check
 ```
