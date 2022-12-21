@@ -12,4 +12,5 @@ jobs:
           excludePaths: |
             dist/**
             README.md
-          errorSize: 1
+          excludeLabels: |
+            skip-size-check
