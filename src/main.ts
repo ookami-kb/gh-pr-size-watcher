@@ -1,12 +1,12 @@
 import * as core from '@actions/core'
-import {context, GitHub} from '@actions/github'
+import {context, getOctokit} from '@actions/github'
 import {Checker, Result} from './checker'
 import {getInputAsArray} from './utils'
 
 async function run(): Promise<void> {
   try {
     const GITHUB_TOKEN = core.getInput('githubToken', {required: true})
-    const gitHub = new GitHub(GITHUB_TOKEN)
+    const gitHub = getOctokit(GITHUB_TOKEN)
     const pr = context.payload.pull_request
     if (!pr) {
       core.setFailed('This is not a PR')
@@ -33,8 +33,8 @@ async function run(): Promise<void> {
       ...context.repo,
       pull_number: pr.number
     }
-    const response = await gitHub.pulls.listFiles(prParams)
-    const pullRequest = await gitHub.pulls.get(prParams)
+    const response = await gitHub.rest.pulls.listFiles(prParams)
+    const pullRequest = await gitHub.rest.pulls.get(prParams)
 
     const result = checker.check({
       title: pullRequest.data.title,
@@ -46,14 +46,14 @@ async function run(): Promise<void> {
       case Result.ok:
         break
       case Result.warning:
-        await gitHub.issues.createComment({
+        await gitHub.rest.issues.createComment({
           ...context.repo,
           issue_number: pr.number,
           body: format(warningMessage, warningSize)
         })
         break
       case Result.error:
-        await gitHub.issues.createComment({
+        await gitHub.rest.issues.createComment({
           ...context.repo,
           issue_number: pr.number,
           body: format(errorMessage, errorSize)
@@ -61,8 +61,10 @@ async function run(): Promise<void> {
         core.setFailed('Maximum PR size exceeded')
         break
     }
-  } catch (error) {
-    core.setFailed(error)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error instanceof Error) core.error(error)
+    else core.setFailed(error.toString())
   }
 }
 
