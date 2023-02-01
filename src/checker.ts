@@ -54,7 +54,7 @@ export class Checker {
 
   private shouldSkip(title: string, labels: string[]): boolean {
     return (
-      this.excludeTitle?.test(title) ??
+      (this.excludeTitle?.test(title) ?? false) ||
       labels.filter(it => this.excludeLabels.includes(it)).length > 0
     )
   }
