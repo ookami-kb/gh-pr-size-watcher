@@ -11,6 +11,47 @@ test('skips validation if excludeTitle matches', () => {
   expect(result).toBe(Result.ok)
 })
 
+test('skips validation if excludeLabels matches', () => {
+  const checker = new Checker({
+    errorSize: 40,
+    warningSize: 30,
+    excludeLabels: ['skip']
+  })
+  const result = checker.check({
+    title: 'PR',
+    files: [
+      {additions: 10, filename: '1.txt'},
+      {additions: 15, filename: '2.txt'},
+      {additions: 100, filename: 'some/test/file.txt'},
+      {additions: 100, filename: 'README.md'},
+      {additions: 100, filename: 'resources/1.json'}
+    ],
+    labels: ['skip']
+  })
+  expect(result).toBe(Result.ok)
+})
+
+test('skips validation if excludeTitle not matches, but excludeLabels matches', () => {
+  const checker = new Checker({
+    errorSize: 40,
+    warningSize: 30,
+    excludeLabels: ['skip'],
+    excludeTitle: new RegExp('NO_VALIDATION'),
+  })
+  const result = checker.check({
+    title: 'PR',
+    files: [
+      {additions: 10, filename: '1.txt'},
+      {additions: 15, filename: '2.txt'},
+      {additions: 100, filename: 'some/test/file.txt'},
+      {additions: 100, filename: 'README.md'},
+      {additions: 100, filename: 'resources/1.json'}
+    ],
+    labels: ['skip']
+  })
+  expect(result).toBe(Result.ok)
+})
+
 test('does validation if excludeTitle not matches', () => {
   const excludeTitle = new RegExp('NO_VALIDATION')
   const checker = new Checker({errorSize: 20, warningSize: 10, excludeTitle})
@@ -99,26 +140,6 @@ test('skips files matching excludePath', () => {
       {additions: 100, filename: 'resources/1.json'}
     ],
     labels: []
-  })
-  expect(result).toBe(Result.ok)
-})
-
-test('skips files matching excludeLabels', () => {
-  const checker = new Checker({
-    errorSize: 40,
-    warningSize: 30,
-    excludeLabels: ['skip']
-  })
-  const result = checker.check({
-    title: 'PR',
-    files: [
-      {additions: 10, filename: '1.txt'},
-      {additions: 15, filename: '2.txt'},
-      {additions: 100, filename: 'some/test/file.txt'},
-      {additions: 100, filename: 'README.md'},
-      {additions: 100, filename: 'resources/1.json'}
-    ],
-    labels: ['skip']
   })
   expect(result).toBe(Result.ok)
 })
