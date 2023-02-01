@@ -8216,7 +8216,8 @@ class Checker {
     }
     shouldSkip(title, labels) {
         var _a, _b;
-        return ((_b = (_a = this.excludeTitle) === null || _a === void 0 ? void 0 : _a.test(title)) !== null && _b !== void 0 ? _b : labels.filter(it => this.excludeLabels.includes(it)).length > 0);
+        return (((_b = (_a = this.excludeTitle) === null || _a === void 0 ? void 0 : _a.test(title)) !== null && _b !== void 0 ? _b : false) ||
+            labels.filter(it => this.excludeLabels.includes(it)).length > 0);
     }
     static getAdditions(data) {
         return data.map(v => v.additions).reduce((acc, v) => acc + v, 0);

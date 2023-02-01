@@ -36,7 +36,7 @@ test('skips validation if excludeTitle not matches, but excludeLabels matches', 
     errorSize: 40,
     warningSize: 30,
     excludeLabels: ['skip'],
-    excludeTitle: new RegExp('NO_VALIDATION'),
+    excludeTitle: new RegExp('NO_VALIDATION')
   })
   const result = checker.check({
     title: 'PR',
