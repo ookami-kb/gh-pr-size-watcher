@@ -1,4 +1,4 @@
-import minimatch from 'minimatch'
+import {minimatch} from 'minimatch'
 import * as core from '@actions/core'
 
 export enum Result {
